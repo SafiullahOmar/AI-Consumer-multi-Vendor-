@@ -15,8 +15,27 @@ class ProductCategory(models.Model):
         return self.title
     
 class Product(models.Model):
+    category=models.ForeignKey(ProductCategory,on_delete=models.SET_NULL,null=True)
+    Vendor=models.ForeignKey(Vendor,on_delete=models.SET_NULL,null=True)
     title=models.CharField(max_length=200)
     detail=models.TextField(null=True)
     price=models.FloatField()
     def __str__(self) :
         return self.title
+
+class Customer(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    mobile=models.PositiveBigIntegerField()
+    def __str__(self) :
+        return self.user.username
+
+class Order(models.Model):
+    customer=models.ForeignKey(Customer,on_delete=models.SET_NULL,null=True)
+    order_time=models.DateTimeField(auto_now_add=True)
+
+class OrderItems(models.Model):
+    order=models.ForeignKey(Order,on_delete=models.SET_NULL,null=True,related_name='order_items')
+    product=models.ForeignKey(Customer,on_delete=models.SET_NULL,null=True)
+
+    def __str__(self) :
+        return self.product.title 
