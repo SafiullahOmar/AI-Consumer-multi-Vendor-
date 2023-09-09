@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from . import models 
 from . import serializers
-from rest_framework import generics ,permissions
+from rest_framework import generics ,permissions , viewsets
 # Create your views here.
 
 class VendorList(generics.ListCreateAPIView):
@@ -33,5 +33,20 @@ class OrderList(generics.ListCreateAPIView):
     serializer_class=serializers.OrderSerializer
 
 class OrderDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset=models.Order.objects.all()
+    queryset=models.OrderItems.objects.all()
     serializer_class=serializers.OrderDetailSerializer
+
+    def get_queryset(self):
+        order_id=self.kwargs['pk']
+        order=models.Order.objects.get(id=order_id)
+        order_items=models.OrderItems.objects.filter(order=order)
+
+        return order_items
+    
+class CustomerAddress(viewsets.ModelViewSet):
+    serializer_class=serializers.CustomerAddressSerializer
+    queryset=models.CustomerAddres.objects.all()
+
+class ProductRatingViewset(viewsets.ModelViewSet):
+    serializer_class=serializers.ProductRatingSerializer
+    queryset=models.ProductRating.objects.all()

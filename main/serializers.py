@@ -27,9 +27,10 @@ class ProductListSerializer(serializers.ModelSerializer):
         super().__init__(*args, **kwargs)
 
 class ProductDetailSerializer(serializers.ModelSerializer):
+    product_rating=serializers.PrimaryKeyRelatedField(many=True,read_only=True)
     class Meta: 
         model=models.Product
-        fields=['id','category','vendor','title','detail','price']
+        fields=['id','category','title','detail','price','product_rating']
         depth=1
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -61,8 +62,25 @@ class OrderSerializer(serializers.ModelSerializer):
 
 class OrderDetailSerializer(serializers.ModelSerializer):
     class Meta:
-        model=models.Order
-        fields=['id','customer']
+        model=models.OrderItems
+        fields=['id','order','product']
+        depth=1
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
+class CustomerAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=models.CustomerAddres
+        fields=['id','customer','address','default_address']
+        depth=1
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+class ProductRatingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=models.ProductRating
+        fields=['id','customer','product','rating','reviews','add_time']
         depth=1
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
